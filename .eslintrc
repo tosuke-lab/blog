@@ -1,0 +1,21 @@
+{
+  "extends": ["eslint:recommended", "next"],
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "parserOptions": {
+        "sourceType": "script"
+      },
+      "rules": {
+        "no-undef": "off"
+      }
+    },
+    {
+      "files": ["**/*.ts?(x)"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/eslint-recommended"
+      ]
+    }
+  ]
+}
