@@ -1,3 +1,5 @@
+const colors = require("tailwindcss/colors");
+
 const transformers = ["ts", "tsx"].reduce((ext, pre) => {
   const transform = (content) => {
     try {
@@ -15,6 +17,7 @@ const transformers = ["ts", "tsx"].reduce((ext, pre) => {
   };
 }, {});
 
+/** @type{ import('tailwindcss/tailwind-config').TailwindConfig */
 module.exports = {
   mode: "jit",
   purge: {
@@ -22,4 +25,14 @@ module.exports = {
     transform: transformers,
   },
   darkMode: "media",
+  theme: {
+    extend: {
+      textColor: {
+        caption: {
+          light: colors.gray[600],
+          dark: colors.gray[400],
+        },
+      },
+    },
+  },
 };

@@ -10,5 +10,6 @@
 /.pnp.*
 
 /.next
+/images/*
 
 *.log

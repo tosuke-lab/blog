@@ -1,5 +1,6 @@
 import "tailwindcss/tailwind.css";
-import "../global.css";
+import "../styles/global.css";
+import "../styles/highlight.css";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 

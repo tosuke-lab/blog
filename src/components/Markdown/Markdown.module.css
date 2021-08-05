@@ -1,0 +1,70 @@
+.markdown {
+  --surface-color: theme("colors.gray.200");
+  @media (prefers-color-scheme: dark) {
+    --surface-color: theme("colors.gray.800");
+  }
+
+  @apply leading-loose;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply font-bold;
+  }
+  h1 {
+    @apply text-3xl;
+  }
+  h2 {
+    @apply text-2xl;
+  }
+  h3 {
+    @apply text-xl;
+  }
+  h4 {
+    @apply text-lg;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    > a {
+      color: inherit;
+    }
+  }
+
+  /* inline code */
+  p code {
+    background-color: var(--surface-color);
+    @apply px-1 py-0.5 rounded-sm;
+  }
+
+  blockquote {
+    background-color: var(--surface-color);
+    @apply pl-4;
+    @apply rounded-r;
+    @apply border-l-4;
+    @apply border-blue-400;
+    @apply dark:border-blue-600;
+  }
+
+  ul,
+  ol {
+    @apply ml-4;
+  }
+  ul {
+    @apply list-disc;
+  }
+  ol {
+    @apply list-decimal;
+  }
+
+  a {
+    @apply text-blue-700;
+    @apply dark:text-blue-400;
+  }
+}

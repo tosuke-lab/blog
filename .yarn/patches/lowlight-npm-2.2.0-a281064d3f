@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index ab3d3125b6167527db4356ba4896bac7e90fe38f..6e30f0d5db86a48e3a55d2e20d05b1eba5e243f7 100644
+--- a/package.json
++++ b/package.json
+@@ -24,7 +24,6 @@
+     "Ezra Lalonde <ezra@usefuliftrue.com>",
+     "Shu Uesugi <shu@chibicode.com>"
+   ],
+-  "sideEffects": false,
+   "type": "module",
+   "main": "index.js",
+   "types": "index.d.ts",
