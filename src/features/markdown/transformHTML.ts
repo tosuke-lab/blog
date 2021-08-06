@@ -17,13 +17,18 @@ export function transformHTML(root: mdast.Root): mdast.Root {
       if (el.type === "element" && el.tagName === "img") {
         return {
           ...node,
-          type: "image",
-          url: el.properties?.src ?? "",
-          alt: el.properties?.alt ?? "",
-          data: {
-            width: el.properties?.width ?? null,
-            height: el.properties?.height ?? null,
-          },
+          type: "paragraph",
+          children: [
+            {
+              type: "image",
+              url: el.properties?.src ?? "",
+              alt: el.properties?.alt ?? "",
+              data: {
+                width: el.properties?.width ?? null,
+                height: el.properties?.height ?? null,
+              },
+            },
+          ],
         };
       }
     }

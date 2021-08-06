@@ -5,7 +5,6 @@ import { removePosition } from "features/markdown/optimize";
 import { transformHTML } from "features/markdown/transformHTML";
 import { highlight } from "features/markdown/highlight";
 import { Markdown } from "components/Markdown";
-import type { ImageInfoMap } from "features/image/types";
 import { collectImageinfo } from "features/image/collectImageInfo";
 import clsx from "clsx";
 import dayjs from "dayjs";
@@ -16,7 +15,6 @@ type EntryPageParams = {
 
 type EntryPageProps = {
   readonly entry: Entry;
-  readonly imageInfo: ImageInfoMap;
 };
 
 export const getStaticPaths: GetStaticPaths<EntryPageParams> = async () => {
@@ -41,11 +39,11 @@ export const getStaticProps: GetStaticProps<EntryPageProps, EntryPageParams> =
         notFound: true,
       };
     }
-    const root = highlight(transformHTML(entry.node));
+    const node = removePosition(
+      await collectImageinfo(highlight(transformHTML(entry.node)))
+    );
 
-    const node = removePosition(root);
-
-    const imageInfo = await collectImageinfo(root);
+    await collectImageinfo(node);
 
     return {
       props: {
@@ -53,12 +51,11 @@ export const getStaticProps: GetStaticProps<EntryPageProps, EntryPageParams> =
           ...entry,
           node,
         },
-        imageInfo,
       },
     };
   };
 
-const EntryPage: NextPage<EntryPageProps> = ({ entry, imageInfo }) => (
+const EntryPage: NextPage<EntryPageProps> = ({ entry }) => (
   <div className={clsx(["mx-auto", "max-w-screen-md"])}>
     <main>
       <div className={clsx("space-y-4")}>
@@ -70,7 +67,7 @@ const EntryPage: NextPage<EntryPageProps> = ({ entry, imageInfo }) => (
         <h1 className={clsx("font-bold", "text-3xl")}>{entry.title}</h1>
       </div>
       <div className="mt-12">
-        <Markdown imageInfoMap={imageInfo} root={entry.node} />
+        <Markdown root={entry.node} />
       </div>
     </main>
   </div>

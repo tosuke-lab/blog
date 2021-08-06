@@ -1,24 +1,18 @@
-import React, { createContext, Fragment, useContext, useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import clsx from "clsx";
 import { tw } from "tailwind-variant.macro";
 import Image from "next/image";
 import type * as mdast from "mdast";
-import { ImageInfoMap } from "features/image/types";
 import { collectString } from "features/markdown/utils/collectString";
 import { HighlightTree } from "features/markdown/highlight";
 import styles from "./Markdown.module.css";
 
-const ImageInfoMapContext = createContext<ImageInfoMap>({});
-
 export const Markdown: React.VFC<{
   readonly root: mdast.Root;
-  readonly imageInfoMap: ImageInfoMap;
-}> = ({ root, imageInfoMap }) => (
-  <ImageInfoMapContext.Provider value={imageInfoMap}>
-    <div className={clsx(styles.markdown, "space-y-4")}>
-      <MDContent contents={root.children} />
-    </div>
-  </ImageInfoMapContext.Provider>
+}> = ({ root }) => (
+  <div className={clsx(styles.markdown, "space-y-4")}>
+    <MDContent contents={root.children} />
+  </div>
 );
 
 const DEFAULT_IMAGE_WIDTH = 560;
@@ -29,20 +23,20 @@ const MDImage: React.VFC<
     alt?: string;
     width?: number;
     height?: number;
+    aspect?: number;
+    blurURL?: string;
   }>
-> = ({ src, alt, width = DEFAULT_IMAGE_WIDTH, height }) => {
-  const imageInfoMap = useContext(ImageInfoMapContext);
-  const info = imageInfoMap[src];
-  return info != null ? (
+> = ({ src, alt, width = DEFAULT_IMAGE_WIDTH, height, aspect, blurURL }) => {
+  return aspect != null ? (
     <Image
       src={src}
       alt={alt}
       width={width}
-      height={height ?? width / info.aspect}
+      height={height ?? width / aspect}
       // 型が厳しすぎるのでanyで無理矢理通す(blurURLがあったりなかったりする場合とか想定してなかったんですか？)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      placeholder={(info.blurURL != null ? "blur" : "empty") as any}
-      blurDataURL={info.blurURL ?? ""}
+      placeholder={(blurURL != null ? "blur" : "empty") as any}
+      blurDataURL={blurURL ?? ""}
     />
   ) : (
     // eslint-disable-next-line
@@ -63,7 +57,7 @@ const MDCode: React.VFC<{ readonly code: mdast.Code }> = ({ code }) => {
     let i = 0;
     const inner = (t: HighlightTree) => (
       <>
-        {t.map((item) => {
+        {t.map((item, j) => {
           if (typeof item === "number") {
             const el = <Fragment key={i}>{value.slice(i, i + item)}</Fragment>;
             i += item;
@@ -71,7 +65,7 @@ const MDCode: React.VFC<{ readonly code: mdast.Code }> = ({ code }) => {
           } else {
             const [className, children] = item;
             return (
-              <span key={i} className={className}>
+              <span key={`${i}-${j}`} className={className}>
                 {inner(children)}
               </span>
             );
@@ -171,6 +165,8 @@ const MDContent: React.VFC<{ readonly contents: mdast.Content[] }> = ({
               alt={content.alt}
               width={content.data?.width as number}
               height={content.data?.height as number}
+              aspect={content.data?.aspect as number}
+              blurURL={content.data?.blurURL as string}
             />
           );
         case "thematicBreak":

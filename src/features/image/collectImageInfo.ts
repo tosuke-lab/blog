@@ -2,7 +2,7 @@ import type * as mdast from "mdast";
 import sizeOf from "image-size";
 import sharp from "sharp";
 import { visit } from "unist-util-visit";
-import type { ImageInfo, ImageInfoMap } from "./types";
+import type { ImageInfo } from "./types";
 import imageDomains from "image-domains.json";
 
 async function fetchImageData(url: string): Promise<ImageInfo | undefined> {
@@ -21,11 +21,11 @@ async function fetchImageData(url: string): Promise<ImageInfo | undefined> {
     } else {
       transformer.resize(null, 8);
     }
-    const blurBuf = await transformer.jpeg({ quality: 70 }).toBuffer();
+    const blurBuf = await transformer.png({ quality: 70 }).toBuffer();
 
     return {
       aspect,
-      blurURL: `data:image/jpeg;base64,${blurBuf.toString("base64")}`,
+      blurURL: `data:image/png;base64,${blurBuf.toString("base64")}`,
     };
   } else {
     return {
@@ -34,25 +34,20 @@ async function fetchImageData(url: string): Promise<ImageInfo | undefined> {
   }
 }
 
-export async function collectImageinfo(
-  root: mdast.Root
-): Promise<ImageInfoMap> {
-  const imageInfoMap: ImageInfoMap = {};
-  const imageUrlSet = new Set<string>();
+export async function collectImageinfo(root: mdast.Root): Promise<mdast.Root> {
   const promises: Promise<void>[] = [];
   visit(root, "image", (imageNode) => {
     const url = imageNode.url;
-    if (imageUrlSet.has(url)) return;
-    imageUrlSet.add(url);
 
     promises.push(
       fetchImageData(url).then((data) => {
         if (data != null) {
-          imageInfoMap[url] = data;
+          imageNode.data ??= {};
+          Object.assign(imageNode.data, data);
         }
       })
     );
   });
   await Promise.all(promises);
-  return imageInfoMap;
+  return root;
 }
