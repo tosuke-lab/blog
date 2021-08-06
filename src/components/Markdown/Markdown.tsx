@@ -1,5 +1,6 @@
 import React, { createContext, Fragment, useContext, useMemo } from "react";
 import clsx from "clsx";
+import { tw } from "tailwind-variant.macro";
 import Image from "next/image";
 import type * as mdast from "mdast";
 import { ImageInfoMap } from "features/image/types";
@@ -48,6 +49,12 @@ const MDImage: React.VFC<
 };
 
 const MDCode: React.VFC<{ readonly code: mdast.Code }> = ({ code }) => {
+  const [lang, name] = (code.lang?.split(":") ?? []) as
+    | []
+    | [string]
+    | [string, string];
+  const title = name ?? lang;
+
   const value = code.value;
   const tree = code.data?.highlight as HighlightTree | undefined;
   const content = useMemo(() => {
@@ -73,8 +80,32 @@ const MDCode: React.VFC<{ readonly code: mdast.Code }> = ({ code }) => {
     if (tree == null) return <>{value}</>;
     return inner(tree);
   }, [value, tree]);
+
   return (
-    <pre className={clsx("leading-relaxed", "bg-[color:var(--surface-color)]")}>
+    <pre
+      className={clsx(
+        ["flex", "flex-col"],
+        "leading-relaxed",
+        "bg-[color:var(--surface-color)]"
+      )}
+    >
+      {title && (
+        <span
+          className={clsx(
+            "self-start",
+            "text-sm",
+            "rounded-sm",
+            ["mt-2", "ml-2"],
+            ["px-1", "py-0.5"],
+            [
+              tw("text-gray-100", "bg-blue-500"),
+              tw.dark("text-gray-900", "bg-blue-300"),
+            ]
+          )}
+        >
+          {title}
+        </span>
+      )}
       <code className={clsx("hljs", "!bg-[color:inherit]")}>{content}</code>
     </pre>
   );

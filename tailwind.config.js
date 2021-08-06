@@ -1,12 +1,13 @@
 const colors = require("tailwindcss/colors");
 
-const transformers = ["ts", "tsx"].reduce((ext, pre) => {
+const transformers = ["ts", "tsx"].reduce((pre, ext) => {
   const transform = (content) => {
     try {
       return require("@babel/core").transformSync(content, {
         filename: `content.${ext}`,
-      });
-    } catch {
+      }).code;
+    } catch (e) {
+      console.error(e);
       return content;
     }
   };
