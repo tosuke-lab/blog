@@ -1,6 +1,5 @@
 import React, { Fragment, useMemo } from "react";
 import clsx from "clsx";
-import { tw } from "tailwind-variant.macro";
 import Image from "next/image";
 import type * as mdast from "mdast";
 import { collectString } from "features/markdown/utils/collectString";
@@ -78,31 +77,24 @@ const MDCode: React.VFC<{ readonly code: mdast.Code }> = ({ code }) => {
   }, [value, tree]);
 
   return (
-    <pre
-      className={clsx(
-        ["flex", "flex-col"],
-        "leading-relaxed",
-        "bg-[color:var(--surface-color)]"
-      )}
-    >
+    <pre className={clsx("relative", "rounded", "hljs", "leading-relaxed")}>
       {title && (
         <span
           className={clsx(
-            "self-start",
+            "absolute",
             "text-sm",
-            "rounded-sm",
-            ["mt-2", "ml-2"],
+            "rounded-r-sm",
+            ["mt-2"],
             ["px-1", "py-0.5"],
-            [
-              tw("text-gray-100", "bg-blue-500"),
-              tw.dark("text-gray-900", "bg-blue-300"),
-            ]
+            ["font-semibold", "text-gray-100", "bg-blue-600"]
           )}
         >
           {title}
         </span>
       )}
-      <code className={clsx("hljs", "!bg-[color:inherit]")}>{content}</code>
+      <code className={clsx("hljs", "rounded", title && "!pt-10")}>
+        {content}
+      </code>
     </pre>
   );
 };
@@ -119,10 +111,7 @@ const MDContent: React.VFC<{ readonly contents: mdast.Content[] }> = ({
           return React.createElement(
             `h${content.depth}`,
             { key: i, id },
-            <a
-              data-content={"#".repeat(content.depth)}
-              href={id != null ? `#${id}` : undefined}
-            >
+            <a href={id != null ? `#${id}` : undefined}>
               <MDContent contents={content.children} />
             </a>
           );
@@ -213,7 +202,7 @@ const MDContent: React.VFC<{ readonly contents: mdast.Content[] }> = ({
             <a
               key={i}
               className={clsx(
-                ["text-blue-500", "dark:text-blue-300"],
+                ["text-blue-600", "dark:text-blue-300"],
                 "hover:underline"
               )}
               href={content.url}

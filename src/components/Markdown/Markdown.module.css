@@ -1,7 +1,9 @@
 .markdown {
   --surface-color: theme("colors.gray.200");
+  --surface-text-color: theme("colors.black");
   @media (prefers-color-scheme: dark) {
     --surface-color: theme("colors.gray.800");
+    --surface-text-color: theme("colors.white");
   }
 
   @apply leading-loose;
@@ -29,16 +31,17 @@
   /* inline code */
   p code {
     background-color: var(--surface-color);
+    color: var(--surface-text-color);
     @apply px-1 py-0.5 rounded-sm;
   }
 
   blockquote {
     background-color: var(--surface-color);
+    color: var(--surface-text-color);
     @apply pl-4;
     @apply rounded-r;
     @apply border-l-4;
-    @apply border-blue-400;
-    @apply dark:border-blue-600;
+    @apply border-blue-600;
   }
 
   ul,
