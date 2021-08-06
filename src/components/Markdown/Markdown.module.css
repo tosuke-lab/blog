@@ -26,17 +26,6 @@
     @apply text-lg;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    > a {
-      color: inherit;
-    }
-  }
-
   /* inline code */
   p code {
     background-color: var(--surface-color);
@@ -61,10 +50,5 @@
   }
   ol {
     @apply list-decimal;
-  }
-
-  a {
-    @apply text-blue-700;
-    @apply dark:text-blue-400;
   }
 }

@@ -214,6 +214,10 @@ const MDContent: React.VFC<{ readonly contents: mdast.Content[] }> = ({
           return (
             <a
               key={i}
+              className={clsx(
+                ["text-blue-500", "dark:text-blue-300"],
+                "hover:underline"
+              )}
               href={content.url}
               target="_blank"
               rel="noreferrer noopener"
