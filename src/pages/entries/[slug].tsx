@@ -1,13 +1,14 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
+import type { Entry } from "features/markdown/types";
 import { entriesParser } from "features/markdown/parser";
-import { Entry } from "features/markdown/types";
 import { removePosition } from "features/markdown/optimize";
-import { Markdown } from "components/Markdown";
-import clsx from "clsx";
-import dayjs from "dayjs";
-import { collectImageinfo } from "features/image/collectImageInfo";
 import { transformHTML } from "features/markdown/transformHTML";
 import { highlight } from "features/markdown/highlight";
+import { Markdown } from "components/Markdown";
+import type { ImageInfoMap } from "features/image/types";
+import { collectImageinfo } from "features/image/collectImageInfo";
+import clsx from "clsx";
+import dayjs from "dayjs";
 
 type EntryPageParams = {
   readonly slug: string;
@@ -15,7 +16,7 @@ type EntryPageParams = {
 
 type EntryPageProps = {
   readonly entry: Entry;
-  readonly imageInfo: Record<string, ImageInfo | undefined>;
+  readonly imageInfo: ImageInfoMap;
 };
 
 export const getStaticPaths: GetStaticPaths<EntryPageParams> = async () => {
@@ -25,8 +26,6 @@ export const getStaticPaths: GetStaticPaths<EntryPageParams> = async () => {
     fallback: false,
   };
 };
-
-type ImageInfo = { readonly aspect: number };
 
 export const getStaticProps: GetStaticProps<EntryPageProps, EntryPageParams> =
   async (ctx) => {
@@ -46,8 +45,7 @@ export const getStaticProps: GetStaticProps<EntryPageProps, EntryPageParams> =
 
     const node = removePosition(root);
 
-    const imageInfo: Record<string, ImageInfo | undefined> =
-      await collectImageinfo(root);
+    const imageInfo = await collectImageinfo(root);
 
     return {
       props: {

@@ -38,6 +38,8 @@ const MDImage: React.VFC<
       alt={alt}
       width={width}
       height={height ?? width / info.aspect}
+      placeholder="blur"
+      blurDataURL={info.blurURL}
     />
   ) : (
     // eslint-disable-next-line
