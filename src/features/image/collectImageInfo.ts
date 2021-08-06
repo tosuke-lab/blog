@@ -7,24 +7,31 @@ import imageDomains from "image-domains.json";
 
 async function fetchImageData(url: string): Promise<ImageInfo | undefined> {
   if (!imageDomains.includes(new URL(url).hostname)) return undefined;
-  const buf = await fetch(url)
-    .then((res) => res.arrayBuffer())
-    .then((arrayBuf) => Buffer.from(arrayBuf));
+  const res = await fetch(url, {});
+  const contentType = res.headers.get("content-type");
+  const buf = await res.arrayBuffer().then((arrayBuf) => Buffer.from(arrayBuf));
   const { width, height } = await sizeOf(buf);
   if (width == null || height == null) return undefined;
+  const aspect = width / height;
 
-  const transformer = sharp(buf);
-  if (width >= height) {
-    transformer.resize(8);
+  if (["image/png", "image/jpeg", "image/webp"].includes(contentType ?? "")) {
+    const transformer = sharp(buf);
+    if (width >= height) {
+      transformer.resize(8);
+    } else {
+      transformer.resize(null, 8);
+    }
+    const blurBuf = await transformer.jpeg({ quality: 70 }).toBuffer();
+
+    return {
+      aspect,
+      blurURL: `data:image/jpeg;base64,${blurBuf.toString("base64")}`,
+    };
   } else {
-    transformer.resize(null, 8);
+    return {
+      aspect,
+    };
   }
-  const blurBuf = await transformer.jpeg({ quality: 70 }).toBuffer();
-
-  return {
-    aspect: width / height,
-    blurURL: `data:image/jpeg;base64,${blurBuf.toString("base64")}`,
-  };
 }
 
 export async function collectImageinfo(

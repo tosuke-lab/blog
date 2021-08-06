@@ -39,8 +39,10 @@ const MDImage: React.VFC<
       alt={alt}
       width={width}
       height={height ?? width / info.aspect}
-      placeholder="blur"
-      blurDataURL={info.blurURL}
+      // 型が厳しすぎるのでanyで無理矢理通す(blurURLがあったりなかったりする場合とか想定してなかったんですか？)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      placeholder={(info.blurURL != null ? "blur" : "empty") as any}
+      blurDataURL={info.blurURL ?? ""}
     />
   ) : (
     // eslint-disable-next-line

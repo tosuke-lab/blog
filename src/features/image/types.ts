@@ -1,6 +1,6 @@
 export type ImageInfo = {
   readonly aspect: number;
-  readonly blurURL: string;
+  readonly blurURL?: string;
 };
 
 export type ImageInfoMap = Record<string, ImageInfo | undefined>;
