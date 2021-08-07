@@ -56,12 +56,12 @@ export const getStaticProps: GetStaticProps<EntryPageProps, EntryPageParams> =
   };
 
 const EntryPage: NextPage<EntryPageProps> = ({ entry }) => (
-  <div className={clsx(["mx-auto", "max-w-screen-md"])}>
+  <div className={clsx("mx-auto", "max-w-screen-md", "px-4")}>
     <main>
       <div className={clsx("space-y-4")}>
-        <p>
+        <p className="text-lg">
           <time dateTime={entry.createdAt}>
-            {dayjs(entry.createdAt).format("YYYY年M月D日")}
+            {dayjs(entry.createdAt).format("YYYY/MM/DD")}
           </time>
         </p>
         <h1 className={clsx("font-bold", "text-3xl")}>{entry.title}</h1>

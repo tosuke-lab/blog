@@ -5,6 +5,11 @@
     "dev": "next dev",
     "build": "next build"
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 version",
+    "not dead"
+  ],
   "dependencies": {
     "clsx": "^1.1.1",
     "dayjs": "^1.10.6",
@@ -51,8 +56,5 @@
     "tailwind-variant.macro": "^0.0.2",
     "tailwindcss": "^2.2.7",
     "typescript": "^4.3.5"
-  },
-  "resolutions": {
-    "lowlight@2.2.0": "patch:lowlight@npm:2.2.0#.yarn/patches/lowlight-npm-2.2.0-a281064d3f"
   }
 }

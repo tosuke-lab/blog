@@ -7,10 +7,15 @@ const withTM = require("next-transpile-modules")([
   "lowlight",
 ]);
 
-/** @type {import('next/dist/next-server/server/config-shared').NextConfig} */
+/** @type {import('next/dist/next-server/server/config-shared')} */
 const config = {
   images: {
     domains: require("./src/image-domains.json"),
+  },
+  webpack: (config, { dev, isServer }) => {
+    if (dev || !isServer) return config;
+    config.optimization.providedExports = false;
+    return config;
   },
 };
 
